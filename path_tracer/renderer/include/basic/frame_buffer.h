@@ -19,14 +19,14 @@ public:
 
     void set(int i, int j, std::array<float, 4 > color )
     {   
-        int ind = m_h * i + j;
+        int ind = j * m_w + i;
         assert(ind < m_w * m_h);
         m_pixel_data[ind] = Color(color);
     }
 
     void set(int i, int j, glm::vec4 color )
     {   
-        int ind = m_h * i + j;
+        int ind = j * m_w + i;
         assert(ind < m_w * m_h);
         m_pixel_data[ind] = Color(color);
     }
@@ -38,7 +38,7 @@ public:
         initDataBuffer();
     }
 
-    FrameBuffer(int w, int h): m_w(w), m_h(h), m_pixel_data(std::vector<Color>(w * h))
+    FrameBuffer(int w, int h): m_w(w), m_h(h)
     {
         initDataBuffer();
     }
