@@ -1,3 +1,4 @@
+#include "util/common.h"
 #include <path_tracer.h>
 
 #include <iostream>
@@ -47,17 +48,33 @@ void PathTracer::render()
 {
     for (int j = 0; j < m_frame_height; j++) {
         for (int i = 0; i < m_frame_width; i++) {
-            auto pixel_center =
-                m_pixel00_position + static_cast<float>(i) * m_pixel_delta_u + static_cast<float>(j) * m_pixel_delta_v;
-            auto ray_direction = glm::normalize(pixel_center - m_camera->m_position);
-            Ray  ray(m_camera->m_position, ray_direction);
-
-            auto pixel_color = rayColor(ray);
+            glm::vec3 pixel_color{0.f};
+            for (int k = 0; k < m_sample_per_pixel; k++) {
+                auto ray = shootRay(i, j);
+                pixel_color += rayColor(ray);
+            }
+            pixel_color /= static_cast<float>(m_sample_per_pixel);
 
             m_frame_buffer.set(i, j, pixel_color);
-            // m_frame_buffer.set(i, j, 255.f * glm::vec4(pixel_color, 1.f));
-
         }
     }
     stbi_write_bmp("out3.bmp", m_frame_buffer.width(), m_frame_buffer.height(), 4, m_frame_buffer.data());
+}
+
+glm::vec3 PathTracer::pixelSampleSquare() const
+{
+    auto px = -0.5f + randomFloat();
+    auto py = -0.5f + randomFloat();
+    return px *m_pixel_delta_u + py * m_pixel_delta_v;
+}
+
+Ray PathTracer::shootRay(int i, int j) const
+{
+    auto pixel_center =
+                m_pixel00_position + static_cast<float>(i) * m_pixel_delta_u + static_cast<float>(j) * m_pixel_delta_v;
+    auto pixel_sample = pixel_center + pixelSampleSquare();
+
+    auto ray_direction = glm::normalize(pixel_sample - m_camera->m_position);
+    
+    return Ray(m_camera->m_position, ray_direction);
 }

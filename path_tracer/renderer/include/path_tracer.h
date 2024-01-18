@@ -25,6 +25,11 @@ public:
     std::shared_ptr<HittableList> m_world {nullptr};
 
 private:
+    glm::vec3 pixelSampleSquare() const;
+    Ray shootRay(int i, int j) const;
+
+    int m_sample_per_pixel {10}; // should there be a sampler class?
+
     glm::vec3 m_pixel_delta_u {0.f};
     glm::vec3 m_pixel_delta_v {0.f};
     glm::vec3 m_pixel00_position {0.f};
