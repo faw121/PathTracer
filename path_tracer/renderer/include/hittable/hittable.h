@@ -1,11 +1,12 @@
 # pragma once
 
-#include <common.h>
+#include <util/common.h>
+#include <util/interval.h>
 #include <ray.h>
 
 #include <limits>
 
-const float Infinity = std::numeric_limits<float>::infinity();
+#define T_NEAR 0.001f
 
 struct HitPoint
 {
@@ -32,7 +33,7 @@ class Hittable
 public:
     virtual ~Hittable() = default;
 
-    virtual bool hit(const Ray& ray, HitPoint& hit_point, float t_max=Infinity, float t_min=0.001f) = 0;
+    virtual bool hit(const Ray& ray, HitPoint& hit_point, Interval t_interval=Interval(T_NEAR, INF)) = 0;
 
     bool rootWithinRange(float root, float t_min, float t_max) { return (root > t_min) && (root < t_max); }
 };

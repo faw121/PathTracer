@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common.h>
+#include <util/common.h>
 #include <hittable/hittable.h>
 #include <ray.h>
 
@@ -17,7 +17,7 @@ public:
     Sphere(glm::vec3 center, float radius): m_center(center), m_radius(radius) {}
 
     // v^2t^2 + 2v(A-C)t + (A-C)^2 - r^2 = 0
-    bool hit(const Ray& ray, HitPoint& hit_point, float t_max=Infinity, float t_min=0.001f) override
+    bool hit(const Ray& ray, HitPoint& hit_point, Interval t_interval=Interval(T_NEAR, INF)) override
     {
         auto ca = ray.start() - m_center;
 
@@ -35,9 +35,9 @@ public:
         float sqrt_d = glm::sqrt(discriminant);
         root = (-b - sqrt_d) / (2.f * a); // near root
 
-        if (!rootWithinRange(root, t_min, t_max)) {
+        if (!t_interval.surrounds(root)) {
             root = (-b + sqrt_d) / (2.f * a); // far root
-            if (!rootWithinRange(root, t_min, t_max))
+            if (!t_interval.surrounds(root))
                 return false;
         }
         hit_point.m_t = root;

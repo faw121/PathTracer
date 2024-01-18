@@ -6,7 +6,7 @@
 #include <vector>
 #include <cassert>
 
-#include <basic/color.h>
+#include <util/color.h>
 
 class FrameBuffer
 {

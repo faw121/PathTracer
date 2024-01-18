@@ -1,6 +1,6 @@
 #pragma once
 
-#include <basic/frame_buffer.h>
+#include <util/frame_buffer.h>
 #include <camera.h>
 #include <hittable/hittable_list.h>
 
