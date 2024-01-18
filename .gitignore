@@ -2,6 +2,7 @@ build/
 bin/
 path_tracer/lib
 .clangd
+.clang-format
 
 cpm_modules/
 CPM_modules/

@@ -4,7 +4,6 @@
 #include <array>
 #include <cstdint>
 #include <vector>
-#include <array>
 #include <cassert>
 
 #include <basic/color.h>
@@ -25,6 +24,20 @@ public:
     }
 
     void set(int i, int j, glm::vec4 color )
+    {   
+        int ind = j * m_w + i;
+        assert(ind < m_w * m_h);
+        m_pixel_data[ind] = Color(color);
+    }
+
+    void set(int i, int j, std::array<float, 3> color )
+    {   
+        int ind = j * m_w + i;
+        assert(ind < m_w * m_h);
+        m_pixel_data[ind] = Color(color);
+    }
+
+    void set(int i, int j, glm::vec3 color )
     {   
         int ind = j * m_w + i;
         assert(ind < m_w * m_h);

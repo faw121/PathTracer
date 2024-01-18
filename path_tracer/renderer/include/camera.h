@@ -6,6 +6,7 @@
 class Camera
 {
 public:
+
     float m_fov {glm::radians(45.f)};
     float m_asp {16.f / 9.f};
     float m_focal_length {1.f}; 
