@@ -1,5 +1,6 @@
-#include "util/common.h"
+#include "glm/ext/quaternion_geometric.hpp"
 #include <path_tracer.h>
+#include <util/common_math.h>
 
 #include <iostream>
 
@@ -26,22 +27,26 @@ bool PathTracer::init()
     return true;
 }
 
-glm::vec3 PathTracer::rayColor(Ray& ray)
-{
+glm::vec3 PathTracer::rayColor(Ray& ray, int depth)
+{   
+    if (depth <= 0)
+        return glm::vec3(0.f);
+
+    HitPoint hit_point;
+
+    if (m_world->hit(ray, hit_point)) {
+        auto bounce_direction = glm::normalize(hit_point.m_normal + randomUnitVector());
+        // auto bounce_ray = Ray(hit_point.m_hit_point, randomOnHemiSphere(hit_point.m_normal));
+        auto bounce_ray = Ray(hit_point.m_hit_point, bounce_direction);
+        return 0.3f * rayColor(bounce_ray, depth - 1);
+    }
+
     glm::vec3 unit_direction = ray.direction();
     float     a              = 0.5f * (unit_direction.y + 1.f);
 
-    glm::vec3 ray_color;
-
     auto back_ground_color = (1.f - a) * glm::vec3{1.f, 1.f, 1.f} + a * glm::vec3 {0.5f, 0.7f, 1.0f};
-    ray_color              = back_ground_color;
 
-    HitPoint hit_point;
-    if (m_world->hit(ray, hit_point)) {
-        ray_color =
-            0.5f * glm::vec3 {hit_point.m_normal.x + 1.f, hit_point.m_normal.y + 1.f, hit_point.m_normal.z + 1.f};
-    }
-    return ray_color;
+    return back_ground_color;
 }
 
 void PathTracer::render()
@@ -51,14 +56,16 @@ void PathTracer::render()
             glm::vec3 pixel_color{0.f};
             for (int k = 0; k < m_sample_per_pixel; k++) {
                 auto ray = shootRay(i, j);
-                pixel_color += rayColor(ray);
+                pixel_color += rayColor(ray, m_max_trace_depth);
             }
             pixel_color /= static_cast<float>(m_sample_per_pixel);
 
+            pixel_color = linearToGamma(pixel_color);
+            
             m_frame_buffer.set(i, j, pixel_color);
         }
     }
-    stbi_write_bmp("out3.bmp", m_frame_buffer.width(), m_frame_buffer.height(), 4, m_frame_buffer.data());
+    stbi_write_bmp("out4.bmp", m_frame_buffer.width(), m_frame_buffer.height(), 4, m_frame_buffer.data());
 }
 
 glm::vec3 PathTracer::pixelSampleSquare() const

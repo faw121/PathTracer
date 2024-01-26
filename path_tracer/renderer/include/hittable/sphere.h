@@ -1,6 +1,6 @@
 #pragma once
 
-#include <util/common.h>
+#include <util/common_math.h>
 #include <hittable/hittable.h>
 #include <ray.h>
 

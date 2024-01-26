@@ -1,6 +1,6 @@
 # pragma once
 
-#include <util/common.h>
+#include <util/common_math.h>
 #include <util/interval.h>
 #include <ray.h>
 
