@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <util/common_math.h>
 #include <hittable/hittable.h>
 #include <ray.h>
@@ -10,11 +11,12 @@ class Sphere: public Hittable
 public:
     glm::vec3 m_center {0.f, 0.f, 0.f};
     float m_radius {1.f};
-    glm::vec3 m_color = {0.8f, 0.7f, 0.2f};
+    std::shared_ptr<Material> m_material {nullptr};
 
     Sphere() = default;
     
-    Sphere(glm::vec3 center, float radius): m_center(center), m_radius(radius) {}
+    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material): 
+        m_center(center), m_radius(radius), m_material(material) {}
 
     // v^2t^2 + 2v(A-C)t + (A-C)^2 - r^2 = 0
     bool hit(const Ray& ray, HitPoint& hit_point, Interval t_interval=Interval(T_NEAR, INF)) override
@@ -41,10 +43,10 @@ public:
                 return false;
         }
         hit_point.m_t = root;
-        hit_point.m_hit_point = ray.at(root);
-        auto normal = (hit_point.m_hit_point - m_center) / m_radius; // faster
+        hit_point.m_hit_point_pos = ray.at(root);
+        auto normal = (hit_point.m_hit_point_pos - m_center) / m_radius; // faster
         hit_point.setFaceNormal(ray, normal);
-        hit_point.m_color = m_color;
+        hit_point.m_material = m_material;
 
         return true;
     }

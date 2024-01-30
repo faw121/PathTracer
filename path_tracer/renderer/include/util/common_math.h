@@ -1,6 +1,9 @@
 #pragma once
 
-#include "glm/exponential.hpp"
+#include <cmath>
+#include <corecrt_math.h>
+#include <glm/exponential.hpp>
+#include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 
@@ -51,5 +54,19 @@ inline glm::vec3 randomOnHemiSphere(const glm::vec3& normal)
 
 inline glm::vec3 linearToGamma(glm::vec3& color)
 {
-    return glm::sqrt(color);
+    return glm::pow(color, glm::vec3{1/2.2f});
+}
+
+inline glm::vec3 reflect(const glm::vec3& i, const glm::vec3& n)
+{
+    return i - 2.f * glm::dot(i, n) * n;
+}
+
+inline glm::vec3 refract(const glm::vec3& i, const glm::vec3& n, float ni_over_no)
+{
+    float cos_theta = fmin(glm::dot(-i, n), 1.f);
+    auto perp = ni_over_no * (i + cos_theta * n);
+    // need fabs here, otherwise there will be black points
+    auto parallel = -glm::sqrt(fabs(1.f - glm::length2(perp))) * n;
+    return perp + parallel;
 }

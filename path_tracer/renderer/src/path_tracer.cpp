@@ -1,11 +1,15 @@
-#include "glm/ext/quaternion_geometric.hpp"
 #include <path_tracer.h>
 #include <util/common_math.h>
+#include <material/material.h>
 
 #include <iostream>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <3rdParty/stb_image_write.h>
+
+#define SAMPLE_PER_PIXEL 50
+#define MAX_TRACE_DEPTH 10
+#define PROB_RR 0.8f
 
 bool PathTracer::init()
 {
@@ -35,10 +39,12 @@ glm::vec3 PathTracer::rayColor(Ray& ray, int depth)
     HitPoint hit_point;
 
     if (m_world->hit(ray, hit_point)) {
-        auto bounce_direction = glm::normalize(hit_point.m_normal + randomUnitVector());
-        // auto bounce_ray = Ray(hit_point.m_hit_point, randomOnHemiSphere(hit_point.m_normal));
-        auto bounce_ray = Ray(hit_point.m_hit_point, bounce_direction);
-        return 0.3f * rayColor(bounce_ray, depth - 1);
+        Ray bounce_ray;
+        auto material = hit_point.m_material;
+        auto attenuation = glm::vec3(0.f);
+        if (!material->scatter(ray, hit_point, attenuation, bounce_ray))
+            return glm::vec3(0.f);
+        return attenuation * rayColor(bounce_ray, depth - 1);
     }
 
     glm::vec3 unit_direction = ray.direction();
@@ -54,11 +60,12 @@ void PathTracer::render()
     for (int j = 0; j < m_frame_height; j++) {
         for (int i = 0; i < m_frame_width; i++) {
             glm::vec3 pixel_color{0.f};
-            for (int k = 0; k < m_sample_per_pixel; k++) {
+            for (int k = 0; k < SAMPLE_PER_PIXEL; k++) {
                 auto ray = shootRay(i, j);
-                pixel_color += rayColor(ray, m_max_trace_depth);
+                pixel_color += rayColor(ray, MAX_TRACE_DEPTH);
             }
-            pixel_color /= static_cast<float>(m_sample_per_pixel);
+
+            pixel_color /= static_cast<float>(SAMPLE_PER_PIXEL);
 
             pixel_color = linearToGamma(pixel_color);
             
