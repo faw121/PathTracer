@@ -21,7 +21,6 @@ void initWorld();
 
 int main()
 {	
-    
     initCamera();
     initWorld();
 
@@ -39,10 +38,11 @@ int main()
 
 void initCamera()
 {
-    camera->m_position = glm::vec3{0.f, 0.f, 0.f};
-    // camera->lookAt(glm::vec3{0.f, 0.f, -2.f});
+    camera->m_position = glm::vec3{-2.f, 2.f, 2.f};
+    camera->lookAt(glm::vec3{0.f, 0.f, -2.f});
     camera->m_focal_length = 0.5f;
     camera->m_asp = asp_ratio;
+    camera->m_fov = 30.f;
 }
 
 void initWorld()
@@ -54,7 +54,7 @@ void initWorld()
     auto dielectric = std::make_shared<Dielectric>(1.5f);
 
     auto sphere_ground = std::make_shared<Sphere>(glm::vec3{0.f, -801.f, -2.f}, 800.f, diffuse_grey);
-    auto ball_middle = std::make_shared<Sphere>(glm::vec3{0.f, 0.f, -2.f}, 1.f, dielectric);
+    auto ball_middle = std::make_shared<Sphere>(glm::vec3{0.f, 0.f, -2.f}, 1.f, diffuse_green);
     auto ball_left = std::make_shared<Sphere>(glm::vec3{-2.f, 0.f, -2.f}, 1.f, dielectric);
     auto ball_inside = std::make_shared<Sphere>(glm::vec3{-2.f, 0.f, -2.f}, -0.8f, dielectric);
     auto ball_right = std::make_shared<Sphere>(glm::vec3{2.f, 0.f, -2.f}, 1.f, metal_gold);

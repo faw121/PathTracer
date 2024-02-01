@@ -19,14 +19,14 @@ bool PathTracer::init()
     }
 
     auto viewport_size = m_camera->viewPortSize();
-    glm::vec3 viewport_v {0.f, -viewport_size.m_height, 0.f};
-    glm::vec3 viewport_u = {viewport_size.m_width, 0.f, 0.f};
+    glm::vec3 viewport_v = -viewport_size.m_height * m_camera->m_up;
+    glm::vec3 viewport_u = viewport_size.m_width * m_camera->m_right;
 
     m_pixel_delta_u = viewport_u / static_cast<float>(m_frame_width);
     m_pixel_delta_v = viewport_v / static_cast<float>(m_frame_height);
 
     auto viewport_upper_left =
-        m_camera->m_position - viewport_u / 2.f - viewport_v / 2.f - glm::vec3 {0.f, 0.f, m_camera->m_focal_length};
+        m_camera->m_position - viewport_u / 2.f - viewport_v / 2.f + m_camera->m_focal_length * m_camera->m_forward;
     m_pixel00_position = viewport_upper_left + 0.5f * (m_pixel_delta_u + m_pixel_delta_v);
 
     return true;
