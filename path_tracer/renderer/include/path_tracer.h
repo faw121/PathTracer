@@ -21,12 +21,12 @@ public:
 
     void render();
 
-    std::shared_ptr<Camera>       m_camera {nullptr};
-    std::shared_ptr<HittableList> m_world {nullptr};
-
 private:
     glm::vec3 pixelSampleSquare() const;
     Ray shootRay(int i, int j) const;
+
+    std::shared_ptr<Camera>       m_camera {nullptr};
+    std::shared_ptr<HittableList> m_world {nullptr};
 
     glm::vec3 m_pixel_delta_u {0.f};
     glm::vec3 m_pixel_delta_v {0.f};

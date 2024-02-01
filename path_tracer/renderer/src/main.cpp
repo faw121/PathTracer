@@ -39,7 +39,8 @@ int main()
 
 void initCamera()
 {
-    camera->m_position = glm::vec3(0.f);
+    camera->m_position = glm::vec3{0.f, 0.f, 0.f};
+    // camera->lookAt(glm::vec3{0.f, 0.f, -2.f});
     camera->m_focal_length = 0.5f;
     camera->m_asp = asp_ratio;
 }
@@ -57,7 +58,6 @@ void initWorld()
     auto ball_left = std::make_shared<Sphere>(glm::vec3{-2.f, 0.f, -2.f}, 1.f, dielectric);
     auto ball_inside = std::make_shared<Sphere>(glm::vec3{-2.f, 0.f, -2.f}, -0.8f, dielectric);
     auto ball_right = std::make_shared<Sphere>(glm::vec3{2.f, 0.f, -2.f}, 1.f, metal_gold);
-
 
     world->add(sphere_ground);
     world->add(ball_middle);
