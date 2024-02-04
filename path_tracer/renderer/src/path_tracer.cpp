@@ -22,6 +22,10 @@ bool PathTracer::init()
     glm::vec3 viewport_v = -viewport_size.m_height * m_camera->m_up;
     glm::vec3 viewport_u = viewport_size.m_width * m_camera->m_right;
 
+    auto defocus_radius = m_camera->defocusRadius();
+    m_defocus_disk_u = defocus_radius * m_camera->m_right;
+    m_defocus_disk_v = defocus_radius * m_camera->m_up;
+
     m_pixel_delta_u = viewport_u / static_cast<float>(m_frame_width);
     m_pixel_delta_v = viewport_v / static_cast<float>(m_frame_height);
 
@@ -89,7 +93,14 @@ Ray PathTracer::shootRay(int i, int j) const
                 m_pixel00_position + static_cast<float>(i) * m_pixel_delta_u + static_cast<float>(j) * m_pixel_delta_v;
     auto pixel_sample = pixel_center + pixelSampleSquare();
 
-    auto ray_direction = glm::normalize(pixel_sample - m_camera->m_position);
+    auto ray_start = m_camera->m_defocus_angle <= 0.f ? m_camera->m_position : defocusDiskSample();
+    auto ray_direction = glm::normalize(pixel_sample - ray_start);
     
-    return Ray(m_camera->m_position, ray_direction);
+    return Ray(ray_start, ray_direction);
+}
+
+glm::vec3 PathTracer::defocusDiskSample() const
+{
+    auto p = randomInUnitDisk();
+    return m_camera->m_position + p.x * m_defocus_disk_u + p.y * m_defocus_disk_v;
 }

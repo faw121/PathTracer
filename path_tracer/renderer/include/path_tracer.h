@@ -23,6 +23,7 @@ public:
 
 private:
     glm::vec3 pixelSampleSquare() const;
+    glm::vec3 defocusDiskSample() const;
     Ray shootRay(int i, int j) const;
 
     std::shared_ptr<Camera>       m_camera {nullptr};
@@ -31,6 +32,9 @@ private:
     glm::vec3 m_pixel_delta_u {0.f};
     glm::vec3 m_pixel_delta_v {0.f};
     glm::vec3 m_pixel00_position {0.f};
+
+    glm::vec3 m_defocus_disk_u {0.f};
+    glm::vec3 m_defocus_disk_v {0.f};
 
     int m_frame_width {1920};
     int m_frame_height {1080};

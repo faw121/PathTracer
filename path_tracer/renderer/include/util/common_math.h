@@ -37,6 +37,17 @@ inline glm::vec3 randomInUnitSphere()
     return v;
 }
 
+inline glm::vec3 randomInUnitDisk()
+{
+    glm::vec3 v;
+    do {
+        v = glm::vec3{randomFloat(-1.f, 1.f),
+            randomFloat(-1.f, 1.f), 0.f};
+    } while (glm::length2(v) > 1.f);
+    
+    return v;
+}
+
 inline glm::vec3 randomUnitVector()
 {
     return glm::normalize(randomInUnitSphere());

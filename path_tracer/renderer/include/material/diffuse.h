@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <material/material.h>
 #include <util/common_math.h>
 

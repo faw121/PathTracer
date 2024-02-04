@@ -38,11 +38,12 @@ int main()
 
 void initCamera()
 {
-    camera->m_position = glm::vec3{-2.f, 2.f, 2.f};
+    camera->m_position = glm::vec3{-2.f, 2.f, 0.f};
     camera->lookAt(glm::vec3{0.f, 0.f, -2.f});
-    camera->m_focal_length = 0.5f;
+    camera->m_focal_length = 3.2f;
     camera->m_asp = asp_ratio;
-    camera->m_fov = 30.f;
+    camera->m_fov = 60.f;
+    camera->m_defocus_angle = 10.f;
 }
 
 void initWorld()
