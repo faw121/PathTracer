@@ -1,5 +1,6 @@
 # Path Tracer
 A path tracer simply follows the [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html) guide.
+
 ![randomBall](img/randomBall.bmp)
 
 ## Features
